@@ -122,34 +122,21 @@ const Getidea = () => {
       );
     }
     setIsLoading(true);
-    const options = {
-      method: "POST",
-      url: "https://bingchat-chatgpt-4-api.p.rapidapi.com/ask",
-      headers: {
-        "content-type": "application/json",
-        "X-RapidAPI-Key": "ce222f844dmshe102f93562134c4p184e64jsn78b106510366",
-        "X-RapidAPI-Host": "bingchat-chatgpt-4-api.p.rapidapi.com",
-      },
-      data: {
-        question: `Give me detailed description for 5 innovative and new Project ideas in the domain of ${domain} using the tech stack ${stack}`,
-        bing_u_cookie:
-          "13TakRc4NWZ53J2MZNgArW3qJyvi04GmMPDJ8HQg1sN7HD6eBaGggEZeO4SW19KzpJJy-MzRm6LQVItPvwePhMQMMFNJps-erp8_RZZ9iR_iD_cSiTNmYJ2jszhwqEGDF6V-BU2_ty7OApMIa60i4HZS6vF_ZUxDWOlZjkC9Yd2fk-JsWyE9FM5ojUeg9qR-sv8lWZfMk-8yF-Gy9jCxa4NF8dKsfITNikYiWLveZI0Y",
-      },
-    };
-
     // const options = {
     //   method: "POST",
-    //   url: "https://chatgpt-gpt-3-5.p.rapidapi.com/ask",
+    //   url: "https://bingchat-chatgpt-4-api.p.rapidapi.com/ask",
     //   headers: {
     //     "content-type": "application/json",
     //     "X-RapidAPI-Key": "ce222f844dmshe102f93562134c4p184e64jsn78b106510366",
-    //     "X-RapidAPI-Host": "chatgpt-gpt-3-5.p.rapidapi.com",
+    //     "X-RapidAPI-Host": "bingchat-chatgpt-4-api.p.rapidapi.com",
     //   },
     //   data: {
-    //     query: `Give me detailed description for 5 innovative and new Project ideas in the domain of ${domain} using the tech stack ${stack}`,
+    //     question: `Give me detailed description for 5 innovative and new Project ideas in the domain of ${domain} using the tech stack ${stack}`,
+    //     bing_u_cookie:
+    //       "13TakRc4NWZ53J2MZNgArW3qJyvi04GmMPDJ8HQg1sN7HD6eBaGggEZeO4SW19KzpJJy-MzRm6LQVItPvwePhMQMMFNJps-erp8_RZZ9iR_iD_cSiTNmYJ2jszhwqEGDF6V-BU2_ty7OApMIa60i4HZS6vF_ZUxDWOlZjkC9Yd2fk-JsWyE9FM5ojUeg9qR-sv8lWZfMk-8yF-Gy9jCxa4NF8dKsfITNikYiWLveZI0Y",
     //   },
     // };
-    // const options = {
+        // const options = {
     //   method: 'POST',
     //   url: 'https://openai80.p.rapidapi.com/chat/completions',
     //   headers: {
@@ -168,10 +155,23 @@ const Getidea = () => {
     //   }
     // };
 
+    const options = {
+      method: "POST",
+      url: "https://chatgpt-gpt-3-5.p.rapidapi.com/ask",
+      headers: {
+        "content-type": "application/json",
+        "X-RapidAPI-Key": "ce222f844dmshe102f93562134c4p184e64jsn78b106510366",
+        "X-RapidAPI-Host": "chatgpt-gpt-3-5.p.rapidapi.com",
+      },
+      data: {
+        query: `Give me detailed description for 5 innovative and new Project ideas in the domain of ${domain} using the tech stack ${stack}`,
+      },
+    };
+
     try {
       const response = await axios.request(options);
       console.log(response);
-      const text = response.data.text_response;
+      const text = response.data.response;
       const startIndex = text.indexOf("1.");
       const filteredText = text.substring(startIndex);
 
@@ -179,21 +179,23 @@ const Getidea = () => {
       const formattedText = filteredText.replace(/\*\*(.*?)\*\*/g, "<b>$1</b>");
 
       // Add line breaks before each point
-      const finalText = formattedText.replace(/(\d+\.\s)/g, "<br>$1");
+      const finalText = formattedText.replace(/(<br>)*(\d+\.\s)/g, "$2");
+
       const res = finalText.replace(/\[\d+\]\[\d+\]/g, "");
 
-      setAiDefinition("");
+      setAiDefinition(res);
 
       let i = 0;
-      const intervalId = setInterval(() => {
-        setAiDefinition((prevText) => prevText + res.charAt(i));
-        i++;
-        if (i === text.length) {
-          clearInterval(intervalId);
-        }
-      }, 50);
-      setshowbtn(true);
-      return response.data;
+      // const intervalId = setInterval(() => {
+      //   setAiDefinition((prevText) => prevText + res.charAt(i));
+      //   i++;
+      //   if (i === text.length) {
+      //     clearInterval(intervalId);
+      //   }
+      // }, 50);
+      // setshowbtn(true);
+      // return response.data;
+      
     } catch (error) {
       console.error(error);
     } finally {
@@ -341,7 +343,7 @@ const Getidea = () => {
             </div>
           </div>
         </div>
-        {/* <div className="items-center justify-center pt-7 pl-7">
+        <div className="items-center justify-center pt-7 pl-7">
           <FormField
             labelName="Click the Button and see the Magic *"
             placeholder="Get Ideas here.."
@@ -350,8 +352,8 @@ const Getidea = () => {
             value={AiDefinition}
             handleChange={(e) => handleFormFieldChange("description", e)}
           />
-        </div> */}
-        <div className="text-neutral-50" dangerouslySetInnerHTML={{__html:AiDefinition}}/>
+        </div>
+        {/* <div className="text-neutral-50" dangerouslySetInnerHTML={{__html:AiDefinition}}/> */}
         {showbtn && (
           <div className="flex justify-center items-center mt-[40px]">
             <CustomButton
