@@ -183,18 +183,18 @@ const Getidea = () => {
 
       const res = finalText.replace(/\[\d+\]\[\d+\]/g, "");
 
-      setAiDefinition(res);
+      setAiDefinition("");
 
       let i = 0;
-      // const intervalId = setInterval(() => {
-      //   setAiDefinition((prevText) => prevText + res.charAt(i));
-      //   i++;
-      //   if (i === text.length) {
-      //     clearInterval(intervalId);
-      //   }
-      // }, 50);
-      // setshowbtn(true);
-      // return response.data;
+      const intervalId = setInterval(() => {
+        setAiDefinition((prevText) => prevText + res.charAt(i));
+        i++;
+        if (i === text.length) {
+          clearInterval(intervalId);
+        }
+      }, 50);
+      setshowbtn(true);
+      return response.data;
       
     } catch (error) {
       console.error(error);
